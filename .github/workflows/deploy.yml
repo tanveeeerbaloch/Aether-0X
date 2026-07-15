@@ -43,7 +43,11 @@ jobs:
         with:
           path: './dist'
 
-      - name: Publish Live Subnets to Pages CDN
-        id: deployment
+      - name: Install Bundler Dependencies
+  run: npm install  # <-- Isko 'npm install' (ya 'npm ci') karo
+
+- name: Compile and Optimize Production Code Bundle
+  run: npm run build
+  
         uses: actions/deploy-pages@v4
         
