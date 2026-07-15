@@ -1,108 +1,20 @@
-import { globalEventBus } from './core/EventBus.js';
-import { globalState } from './core/StateManager.js';
-import { globalStorage } from './core/StorageEngine.js';
-import { ModuleRegistry } from './core/Registry.js';
+// --- Add imports to the top of src/main.js ---
+import { Telemetry } from './core/Telemetry.js';
 
-// Import our custom modules
-import { FamilyChatModule } from './modules/FamilyChat/index.js';
-import { GamesModule } from './modules/Games/index.js';
+// --- Insert this execution sequence inside the CoreApp.bootstrap() method ---
+// (Ideally right after "this.dispatchSystemNotification('success', 'Aether-0X System Subnets Fully Online.')")
 
-/**
- * Main Application Orchestration Shell
- */
-const CoreApp = {
-    async bootstrap() {
-        try {
-            // 1. Initialize DB connections and state engines
-            await globalStorage.init();
-            
-            // 2. Load prior user preferences (Defaulting to Night/Dark mode)
-            const savedTheme = (await globalStorage.get('preferences', 'active_theme')) || 'theme-night';
-            document.body.className = savedTheme;
-            globalState.set('currentTheme', savedTheme);
+// Initialize Telemetry Audits
+Telemetry.start();
 
-            // 3. Render HTML Structural Shell direct into Document body
-            this.#renderApplicationSkeleton();
-
-            // 4. Initialize Module Registry inside the workspace container
-            const workspace = document.getElementById('main-workspace-mount');
-            ModuleRegistry.init(workspace);
-
-            // 5. Register core functional modules
-            ModuleRegistry.register(FamilyChatModule);
-            ModuleRegistry.register(GamesModule);
-
-            // 6. Hook up interactions, navigations, and global event listeners
-            this.#setupGlobalUIListeners();
-            this.#buildDynamicSidebarNavigation();
-            this.#startSystemClock();
-
-            // 7. Render initial module view
-            const fallbackModuleId = FamilyChatModule.id;
-            await ModuleRegistry.loadModule(fallbackModuleId);
-            this.#highlightActiveNavigationItem(fallbackModuleId);
-
-            // Success trigger
-            this.dispatchSystemNotification('success', 'Aether-0X System Subnets Fully Online.');
-
-        } catch (error) {
-            console.error("Critical System Crash during Bootstrap Sequence:", error);
-            document.body.innerHTML = `
-                <div style="height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #05050a; color: #ff0055; font-family: monospace; text-align: center; padding: 20px;">
-                    <h1 style="font-size: 2rem; margin-bottom: 10px;">CORE_INIT_HALTED</h1>
-                    <p style="color: #ffffff; opacity: 0.7;">A critical error prevented the interface framework from booting up.</p>
-                    <pre style="background: rgba(255,0,85,0.1); border: 1px dashed #ff0055; padding: 15px; border-radius: 8px; margin-top: 20px; font-size: 0.85rem; max-width: 600px; text-align: left; overflow-x: auto;">${error.stack || error}</pre>
-                </div>
-            `;
-        }
-    },
-
-    #renderApplicationSkeleton() {
-        document.body.innerHTML = `
-            <!-- Global Interactive Notification HUD -->
-            <div id="global-notification-hub" style="position: fixed; top: 20px; right: 20px; z-index: 1000; display: flex; flex-direction: column; gap: 10px; pointer-events: none;"></div>
-
-            <div class="syndicate-layout-wrapper">
-                <!-- Left Sidebar Navigation Panel -->
-                <aside class="sidebar-aside-panel">
-                    <div class="sidebar-brand">
-                        <span class="brand-logo">A0X</span>
-                        <span class="brand-title">Aether Frame</span>
-                    </div>
-                    
-                    <nav class="sidebar-nav">
-                        <ul id="sidebar-nav-list" class="nav-list"></ul>
-                    </nav>
-
-                    <div class="sidebar-footer">
-                        <!-- Dual-Theme Mode Trigger -->
-                        <button id="theme-matrix-toggle" class="system-footer-action-btn" aria-label="Toggle visual theme state">
-                            <span class="theme-sun-icon">☀️</span>
-                            <span class="theme-moon-icon">🌙</span>
-                        </button>
-                    </div>
-                </aside>
-
-                <!-- Main Content Panel Area -->
-                <main class="main-content-viewport">
-                    <header class="app-header-node">
-                        <div class="header-breadcrumb">
-                            <span class="root-node">Console</span>
-                            <span class="breadcrumb-divider">/</span>
-                            <span id="header-active-module" class="active-node">Loading...</span>
-                        </div>
-                        <div class="header-status-suite">
-                            <div class="status-clock" id="system-time-display">00:00:00</div>
-                            <div class="status-badge">
-                                <span class="pulse-indicator"></span>
-                                <span class="badge-label">SECURE_SYNC</span>
-                            </div>
-                        </div>
-                    </header>
-
-                    <!-- Primary Mounting Target for Dynamic Modules -->
-                    <div id="main-workspace-mount" class="workspace-viewport"></div>
-                </main>
+// Register production Service Worker
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+            .then(reg => console.log('%c[PWA] ServiceWorker network sync active.', 'color: #00ffcc;'))
+            .catch(err => console.error('[PWA] ServiceWorker installation aborted:', err));
+    });
+}
             </div>
         `;
     },
