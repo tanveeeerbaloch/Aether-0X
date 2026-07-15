@@ -1,4 +1,4 @@
-name: Deploy Aether-0X Production Engine
+name: Deploy Aether-OX Production Engine
 
 on:
   push:
@@ -43,11 +43,6 @@ jobs:
         with:
           path: './dist'
 
-      - name: Install Bundler Dependencies
-  run: npm install  # <-- Isko 'npm install' (ya 'npm ci') karo
-
-- name: Compile and Optimize Production Code Bundle
-  run: npm run build
-  
+      - name: Deploy to GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v4
-        
