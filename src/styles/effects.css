@@ -1,0 +1,44 @@
+/* CRT Screen Visual Post-Processing */
+.syndicate-layout-wrapper {
+    position: relative;
+    overflow: hidden;
+}
+
+/* Glass Scanline Grid Overlay */
+.syndicate-layout-wrapper::before {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    z-index: 999;
+    background-size: 100% 4px, 6px 100%;
+    pointer-events: none;
+    opacity: 0.12;
+}
+
+/* Toggleable analog screen vignette and breathing flicker */
+.theme-night .syndicate-layout-wrapper::after {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+    background: radial-gradient(circle, transparent 60%, rgba(4, 4, 9, 0.8) 100%);
+    z-index: 1000;
+    pointer-events: none;
+    animation: monitorFlicker 0.15s infinite;
+}
+
+/* High performance micro-flicker keyframe */
+@keyframes monitorFlicker {
+    0% { opacity: 0.98; }
+    50% { opacity: 1.0; }
+    100% { opacity: 0.98; }
+}
+
+/* High dynamic glow for panels */
+.theme-night .workspace-viewport {
+    text-shadow: 0 0 1px rgba(0, 255, 204, 0.3);
+                              }
+
