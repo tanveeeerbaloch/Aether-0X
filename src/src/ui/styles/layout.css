@@ -1,0 +1,201 @@
+/* ==========================================================================
+   AETHER-0X GRID MATRIX AND NAVIGATION ADAPTERS
+   ========================================================================== */
+
+.aether-grid-wrapper {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: 100vh;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    gap: 16px;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+/* Sidebar Structure */
+#aether-sidebar {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border-radius: 16px;
+    padding: 20px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    z-index: 20;
+}
+
+#aether-sidebar.sidebar-collapsed {
+    width: 78px;
+}
+
+#aether-sidebar.sidebar-expanded {
+    width: 280px;
+}
+
+/* Sidebar Logo & Toggle Header */
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 30px;
+    min-height: 40px;
+}
+
+.logo-mark {
+    font-family: var(--font-mono);
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--accent-color);
+    letter-spacing: -1px;
+    transition: opacity 0.3s ease;
+}
+
+#aether-sidebar.sidebar-collapsed .logo-mark {
+    opacity: 0;
+    width: 0;
+    pointer-events: none;
+}
+
+/* Toggle Hamburger Button Component */
+.toggle-control {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-line {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background-color: var(--text-primary);
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+#aether-sidebar.sidebar-expanded .line-top {
+    transform: translateY(4px) rotate(45deg);
+}
+
+#aether-sidebar.sidebar-expanded .line-bottom {
+    transform: translateY(-4px) rotate(-45deg);
+}
+
+/* Navigation System List & Items */
+.sidebar-menu {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+.menu-item-container {
+    width: 100%;
+}
+
+.menu-item-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px;
+    border-radius: 10px;
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--text-muted);
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 0.95rem;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.3s ease;
+}
+
+.menu-item-btn:hover {
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text-primary);
+    border-color: rgba(255, 255, 255, 0.05);
+}
+
+.menu-item-btn.is-active {
+    background: rgba(var(--accent-rgb), 0.1);
+    border-color: var(--glass-border-hover);
+    color: var(--accent-color);
+}
+
+.menu-icon-slot {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    width: 24px;
+    height: 24px;
+}
+
+.menu-label-text {
+    white-space: nowrap;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+#aether-sidebar.sidebar-collapsed .menu-label-text {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Core Main Viewport */
+#aether-viewport {
+    width: 100%;
+    height: 100%;
+    border-radius: 16px;
+    overflow-y: auto;
+    position: relative;
+    padding: 24px;
+}
+
+/* Mobile Responsiveness Rules (Mobile-first adapters) */
+@media (max-width: 768px) {
+    .aether-grid-wrapper {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr;
+        padding: 8px;
+        gap: 8px;
+    }
+
+    #aether-sidebar {
+        position: absolute;
+        top: 8px;
+        left: -100%;
+        height: calc(100% - 16px);
+        width: 280px !important;
+        transition: left 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    #aether-sidebar.sidebar-expanded {
+        left: 8px;
+    }
+
+    #aether-sidebar.sidebar-collapsed {
+        left: -100%;
+    }
+
+    /* Fixed top navigation toggle for mobile layout options */
+    .mobile-nav-bar {
+        position: absolute;
+        top: 16px;
+        left: 16px;
+        z-index: 30;
+    }
+      }
+
