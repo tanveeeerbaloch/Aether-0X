@@ -31,3 +31,9 @@ export default defineConfig({
   }
 });
 
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  base: '/Aether-OX/', // Yeh tumhare repo ka exact naam hona chahiye
+  // baki configurations...
+})
